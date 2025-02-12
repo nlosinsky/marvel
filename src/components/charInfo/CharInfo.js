@@ -1,8 +1,9 @@
+import Skeleton from "../skeleton/Skeleton";
+import ComicsList from "../comicsList/ComicsList";
+
 import thorImg from '../../resources/thor.jpeg';
 
 import './charInfo.scss';
-import Skeleton from "../skeleton/skeleton";
-import ComicsList from "../comicsList/comicsList";
 
 const CharInfo = () => {
   return (
