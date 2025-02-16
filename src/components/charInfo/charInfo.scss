@@ -27,6 +27,10 @@
       width: 150px;
       height: 150px;
       object-fit: cover;
+
+      &[src*='image_not_available'] {
+        object-fit: contain;
+      }
     }
   }
 
