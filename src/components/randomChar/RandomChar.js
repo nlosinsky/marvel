@@ -23,8 +23,7 @@ class RandomChar extends Component {
 
   marvelService = new MarvelService();
 
-  constructor(props) {
-    super(props);
+  componentDidMount() {
     this.loadChar();
   }
 
@@ -33,6 +32,13 @@ class RandomChar extends Component {
     this.marvelService.getCharacter(id)
       .then(this.onCharLoaded)
       .catch(this.onError)
+  }
+
+  reloadChar = () => {
+    this.setState({
+      loading: true
+    });
+    this.loadChar();
   }
 
   onCharLoaded = (char) => {
@@ -62,7 +68,7 @@ class RandomChar extends Component {
           <p className="randomchar__title">
             Or choose another one
           </p>
-          <button className="button button__main">
+          <button onClick={this.reloadChar} className="button button__main">
             <div className="inner">try it</div>
           </button>
           <img src={mjolnirImg} alt="mjolnir" className="randomchar__decoration"/>
