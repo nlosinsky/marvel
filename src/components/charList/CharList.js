@@ -11,29 +11,51 @@ class CharList extends Component {
   state = {
     charList: [],
     loading: true,
-    error: false
+    newItemsLoading: false,
+    error: false,
+    offset: 0,
+    itemsPerPage: 3,
+    charEnded: false
   }
 
   marvelService = new MarvelService();
 
   componentDidMount() {
-    this.marvelService.getAllCharacters()
-      .then(this.onCharListLoaded)
-      .catch(this.onError);
+    this.loadCharacters();
   }
 
   onCharListLoaded = (newCharList) => {
-    this.setState({
-      charList: newCharList,
-      loading: false
+    this.setState(state => {
+      const charList = state.charList.concat(newCharList);
+      return {
+        charList,
+        loading: false,
+        newItemsLoading: false,
+        offset: charList.length,
+        charEnded: newCharList.length < state.itemsPerPage
+      }
     });
+  }
+
+  onCharListLoading = () => {
+    this.setState({newItemsLoading: true});
   }
 
   onError = () => {
     this.setState({
       error: true,
-      loading: false
+      loading: false,
+      newItemsLoading: false
     });
+  }
+
+  loadCharacters = () => {
+    const { offset, itemsPerPage } = this.state;
+
+    this.onCharListLoading();
+    this.marvelService.getAllCharacters(offset, itemsPerPage)
+      .then(this.onCharListLoaded)
+      .catch(this.onError);
   }
 
   renderItems = (charList) => {
@@ -54,7 +76,7 @@ class CharList extends Component {
   }
 
   render() {
-    const { charList, loading, error } = this.state;
+    const { charList, loading, error, newItemsLoading, charEnded} = this.state;
     const errorMessage = error ? <ErrorMessage/> : null;
     const spinner = loading ? <Spinner/> : null;
     const content = !(loading || error) ? this.renderItems(charList) : null;
@@ -62,9 +84,13 @@ class CharList extends Component {
     return (
       <div className="char__list">
         {errorMessage}
-        {spinner}
         {content}
-        <button className="button button__main button__long">
+        {spinner}
+        <button onClick={this.loadCharacters}
+                disabled={newItemsLoading}
+                style={{display: charEnded ? 'none' : 'block'}}
+                className="button button__main button__long"
+        >
           <div className="inner">load more</div>
         </button>
       </div>
