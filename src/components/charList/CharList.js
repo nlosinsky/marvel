@@ -14,8 +14,9 @@ class CharList extends Component {
     newItemsLoading: false,
     error: false,
     offset: 0,
-    itemsPerPage: 3,
-    charEnded: false
+    itemsPerPage: 9,
+    charEnded: false,
+    selectedCharId: null
   }
 
   marvelService = new MarvelService();
@@ -58,10 +59,30 @@ class CharList extends Component {
       .catch(this.onError);
   }
 
+  onCharSelected = (charId) => {
+    this.setState({selectedCharId: charId});
+    this.props.onCharSelected(charId);
+  }
+
   renderItems = (charList) => {
     const list = charList.map(item => {
+      let classes = "char__item";
+
+      if (this.state.selectedCharId === item.id) {
+        classes += ' char__item_selected';
+      }
+
       return (
-        <li className="char__item" key={item.id} onClick={() => this.props.onCharSelected(item.id)}>
+        <li className={classes}
+            key={item.id}
+            onClick={() => this.onCharSelected(item.id)}
+            onKeyDown={(e) => {
+              if (e.key === ' ' || e.key === 'Enter') {
+                this.onCharSelected(item.id)
+              }
+            }}
+            tabIndex="0"
+        >
           <img src={item.thumbnail} alt={item.name}/>
           <div className="char__name">{item.name}</div>
         </li>
