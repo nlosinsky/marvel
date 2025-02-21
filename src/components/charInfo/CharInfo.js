@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 
 import Skeleton from "../skeleton/Skeleton";
-import ComicsList from "../comicsList/ComicsList";
 import ErrorMessage from "../errorMessage/ErrorMessage";
 import Spinner from "../spinner/Spinner";
 import useMarvelService from "../../services/MarvelService";
@@ -50,6 +49,14 @@ const CharInfo = (props) => {
 const View = ({ char }) => {
   const { name, description, thumbnail, homepage, wiki, comics } = char;
 
+  const comicsItems = comics.map((item, i) => {
+    return (
+      <li key={i} className="char__comics-item">
+        {item.name}
+      </li>
+    );
+  });
+
   return (
     <>
       <div className="char__basics">
@@ -70,7 +77,11 @@ const View = ({ char }) => {
         {description}
       </div>
 
-      <ComicsList comics={comics}/>
+      <div className="char__comics">Comics:</div>
+      <ul className="char__comics-list">
+        {comics.length ? null : <span>There are no comics with this character</span>}
+        {comicsItems}
+      </ul>
     </>
   )
 }
