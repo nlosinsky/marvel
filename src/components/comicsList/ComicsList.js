@@ -1,8 +1,11 @@
-import './comicsList.scss';
+import { Link } from "react-router-dom";
+
 import { useEffect, useState } from "react";
 import useMarvelService from "../../services/MarvelService";
 import ErrorMessage from "../errorMessage/ErrorMessage";
 import Spinner from "../spinner/Spinner";
+
+import './comicsList.scss';
 
 const ComicsList = ({ comics }) => {
   const itemsPerPage = 8;
@@ -41,11 +44,11 @@ const ComicsList = ({ comics }) => {
     const list = comicsList.map((item, i) => {
       return (
         <li className="comics__item" key={i}>
-          <a href="#">
+          <Link to={`/comics/${item.id}`}>
             <img src={item.thumbnail} alt={item.title} className="comics__item-img"/>
             <div className="comics__item-name">{item.title}</div>
             <div className="comics__item-price">{item.price}</div>
-          </a>
+          </Link>
         </li>
       )
     })

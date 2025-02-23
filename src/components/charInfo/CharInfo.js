@@ -6,6 +6,7 @@ import Spinner from "../spinner/Spinner";
 import useMarvelService from "../../services/MarvelService";
 
 import './charInfo.scss';
+import { Link } from "react-router-dom";
 
 const CharInfo = (props) => {
   const [char, setChar] = useState(null);
@@ -49,10 +50,24 @@ const CharInfo = (props) => {
 const View = ({ char }) => {
   const { name, description, thumbnail, homepage, wiki, comics } = char;
 
+  const getComicId = (comic) => {
+    if (!comic.resourceURI) {
+      return null;
+    }
+    const val = comic.resourceURI.split('/').pop();
+
+    if (typeof parseInt(val) !== 'number') {
+      return null;
+    }
+
+    return val;
+  }
+
   const comicsItems = comics.map((item, i) => {
+    const comicId = getComicId(item);
     return (
       <li key={i} className="char__comics-item">
-        {item.name}
+        {comicId ? <Link to={`/comics/${comicId}`}>{item.name}</Link> : item.name}
       </li>
     );
   });
@@ -60,7 +75,7 @@ const View = ({ char }) => {
   return (
     <>
       <div className="char__basics">
-        <img src={thumbnail} alt="abyss"/>
+        <img src={thumbnail} alt={name}/>
         <div>
           <div className="char__info-name">{name}</div>
           <div className="char__btns">
