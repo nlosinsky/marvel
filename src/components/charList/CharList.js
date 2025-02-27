@@ -5,6 +5,7 @@ import ErrorMessage from "../errorMessage/ErrorMessage";
 import Spinner from "../spinner/Spinner";
 
 import './charList.scss';
+import { TransitionGroup, CSSTransition } from "react-transition-group";
 
 
 const CharList = (props) => {
@@ -54,25 +55,33 @@ const CharList = (props) => {
       }
 
       return (
-        <li className={classes}
-            key={item.id}
-            onClick={() => onCharSelected(item.id)}
-            onKeyDown={(e) => {
-              if (e.key === ' ' || e.key === 'Enter') {
-                onCharSelected(item.id)
-              }
-            }}
-            tabIndex="0"
+        <CSSTransition
+          key={item.id}
+          timeout={500}
+          classNames="char__item"
         >
-          <img src={item.thumbnail} alt={item.name}/>
-          <div className="char__name">{item.name}</div>
-        </li>
+          <li className={classes}
+              key={item.id}
+              onClick={() => onCharSelected(item.id)}
+              onKeyDown={(e) => {
+                if (e.key === ' ' || e.key === 'Enter') {
+                  onCharSelected(item.id)
+                }
+              }}
+              tabIndex="0"
+          >
+            <img src={item.thumbnail} alt={item.name}/>
+            <div className="char__name">{item.name}</div>
+          </li>
+        </CSSTransition>
       );
     });
 
     return (
       <ul className="char__grid">
-        {list}
+        <TransitionGroup component={null}>
+          {list}
+        </TransitionGroup>
       </ul>
     )
   }
