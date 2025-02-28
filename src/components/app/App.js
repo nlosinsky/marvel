@@ -12,22 +12,22 @@ const SingleCharPage = lazy(() => import("../pages/SingleCharPage"));
 
 const App = () => {
   return (
-   <Router>
-     <div className="app">
-       <AppHeader/>
-       <main>
-         <Suspense fallback={Spinner}>
-           <Routes>
-             <Route path="/" element={<MainPage />}></Route>
-             <Route path="/comics" element={<ComicsPage />}></Route>
-             <Route path="/comics/:comicId" element={<SingleComicPage />}></Route>
-             <Route path="/char/:charId" element={<SingleCharPage />}></Route>
-             <Route path="*" element={<Page404 />}></Route>
-           </Routes>
-         </Suspense>
-       </main>
-     </div>
-   </Router>
+    <Router>
+      <div className="app">
+        <AppHeader/>
+        <main>
+          <Suspense fallback={Spinner}>
+            <Routes>
+              <Route path="/" element={<MainPage/>}></Route>
+              <Route path="/comics" element={<ComicsPage/>}></Route>
+              <Route path="/comics/:comicId" element={<SingleComicPage/>}></Route>
+              <Route path="/characters/:charId" element={<SingleCharPage/>}></Route>
+              <Route path="*" element={<Page404/>}></Route>
+            </Routes>
+          </Suspense>
+        </main>
+      </div>
+    </Router>
   );
 }
 
