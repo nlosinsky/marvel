@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
+import PropTypes from "prop-types";
+import { TransitionGroup, CSSTransition } from "react-transition-group";
 
 import useMarvelService from "../../services/MarvelService";
 import ErrorMessage from "../errorMessage/ErrorMessage";
 import Spinner from "../spinner/Spinner";
 
 import './charList.scss';
-import { TransitionGroup, CSSTransition } from "react-transition-group";
 
 
 const CharList = (props) => {
@@ -104,6 +105,10 @@ const CharList = (props) => {
       </button>
     </div>
   );
+}
+
+CharList.propTypes = {
+  onCharSelected: PropTypes.func.isRequired
 }
 
 export default CharList;

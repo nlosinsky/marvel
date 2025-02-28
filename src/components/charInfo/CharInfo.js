@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
 
 import Skeleton from "../skeleton/Skeleton";
 import ErrorMessage from "../errorMessage/ErrorMessage";
@@ -6,7 +8,6 @@ import Spinner from "../spinner/Spinner";
 import useMarvelService from "../../services/MarvelService";
 
 import './charInfo.scss';
-import { Link } from "react-router-dom";
 
 const CharInfo = (props) => {
   const [char, setChar] = useState(null);
@@ -99,6 +100,10 @@ const View = ({ char }) => {
       </ul>
     </>
   )
+}
+
+CharInfo.propTypes = {
+  charId: PropTypes.number
 }
 
 export default CharInfo;
