@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import PropTypes from "prop-types";
-import { TransitionGroup, CSSTransition } from "react-transition-group";
 
 import useMarvelService from "../../services/MarvelService";
 import ErrorMessage from "../errorMessage/ErrorMessage";
@@ -30,7 +29,6 @@ const CharList = (props) => {
   const [newItemsLoading, setNewItemsLoading] = useState(false);
   const [offset, setOffset] = useState(0);
   const [charEnded, setCharEnded] = useState(false);
-  const [selectedCharId, setSelectedCharId] = useState(null);
   const { getAllCharacters, process, setProcess } = useMarvelService();
 
   useEffect(() => {
@@ -60,53 +58,58 @@ const CharList = (props) => {
   }
 
   const onCharSelected = (charId) => {
-    setSelectedCharId(charId)
     props.onCharSelected(charId);
   }
 
+  const itemRefs = useRef([]);
+
+  const focusOnItem = (id) => {
+    itemRefs.current.forEach(item => item.classList.remove('char__item_selected'));
+    itemRefs.current[id].classList.add('char__item_selected');
+    itemRefs.current[id].focus();
+  }
+
   const renderItems = (charList) => {
-    const list = charList.map(item => {
+    console.log('render');
+    const list = charList.map((item, i) => {
       let classes = "char__item";
 
-      if (selectedCharId === item.id) {
-        classes += ' char__item_selected';
-      }
-
       return (
-        <CSSTransition
-          key={item.id}
-          timeout={500}
-          classNames="char__item"
+        <li className={classes}
+            key={item.id}
+            ref={el => itemRefs.current[i] = el}
+            onClick={() => {
+              onCharSelected(item.id);
+              focusOnItem(i);
+            }}
+            onKeyDown={(e) => {
+              if (e.key === ' ' || e.key === 'Enter') {
+                onCharSelected(item.id);
+                focusOnItem(i);
+              }
+            }}
+            tabIndex="0"
         >
-          <li className={classes}
-              key={item.id}
-              onClick={() => onCharSelected(item.id)}
-              onKeyDown={(e) => {
-                if (e.key === ' ' || e.key === 'Enter') {
-                  onCharSelected(item.id)
-                }
-              }}
-              tabIndex="0"
-          >
-            <img src={item.thumbnail} alt={item.name}/>
-            <div className="char__name">{item.name}</div>
-          </li>
-        </CSSTransition>
+          <img src={item.thumbnail} alt={item.name}/>
+          <div className="char__name">{item.name}</div>
+        </li>
       );
     });
 
     return (
       <ul className="char__grid">
-        <TransitionGroup component={null}>
-          {list}
-        </TransitionGroup>
+        {list}
       </ul>
     )
   }
 
+  const elements = useMemo(() => {
+    return setContent(process, () => renderItems(charList), newItemsLoading);
+  }, [process]);
+
   return (
     <div className="char__list">
-      {setContent(process, () => renderItems(charList), newItemsLoading)}
+      {elements}
 
       <button onClick={() => loadCharacters(false)}
               disabled={newItemsLoading}

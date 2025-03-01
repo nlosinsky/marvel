@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import useMarvelService from "../../services/MarvelService";
 import ErrorMessage from "../errorMessage/ErrorMessage";
@@ -75,9 +75,13 @@ const ComicsList = ({ comics }) => {
     )
   }
 
+  const elements = useMemo(() => {
+    return setContent(process, () => renderItems(comicsList), newItemsLoading);
+  }, [process]);
+
   return (
     <div className="comics__list">
-      {setContent(process, () => renderItems(comicsList), newItemsLoading)}
+      {elements}
 
       <button onClick={() => loadComics(false)}
               disabled={newItemsLoading}
