@@ -8,6 +8,7 @@ import CharInfo from "../charInfo/CharInfo";
 import CharSearchForm from "../charSearchForm/CharSearchForm";
 
 import visionImg from '../../resources/vision.png';
+import { useNavigation } from "react-router-dom";
 
 const MainPage = () => {
   const [selectedChar, selectChar] = useState(null);
@@ -15,6 +16,8 @@ const MainPage = () => {
   const onCharSelected = (id) => {
     selectChar(id);
   }
+
+  useNavigation()
 
   return (
     <>
